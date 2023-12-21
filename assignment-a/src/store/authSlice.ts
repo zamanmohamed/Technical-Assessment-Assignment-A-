@@ -119,7 +119,7 @@ export const getUser = (state: any) => state.auth.user;
 export const getAuthStatus = (state: any) => state.auth.status;
 export const getAuthError = (state: any) => state.auth.error;
 
-export const { resetAuthStatus } = authSlice.actions;
+export const { resetAuthStatus, logout } = authSlice.actions;
 
 export default authSlice.reducer;
 function getState(): RootState {

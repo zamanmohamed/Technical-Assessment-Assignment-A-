@@ -5,14 +5,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import InputField from "@/components/FormElement/InputField";
 import Button from "@/components/FormElement/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store";
+import { AppDispatch, RootState } from "@/store";
 import { useRouter } from "next/router";
 import React, { ChangeEvent } from "react";
 import { signup } from "@/store/authSlice";
 
 const Register = () => {
   const { status } = useSelector((state: RootState) => state.auth);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const router = useRouter();
 

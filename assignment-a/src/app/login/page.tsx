@@ -4,13 +4,13 @@ import InputField from "@/components/FormElement/InputField";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "react-bootstrap";
 import React, { ChangeEvent } from "react";
-import { RootState } from "@/store";
+import { AppDispatch, RootState } from "@/store";
 import { login } from "@/store/authSlice";
 import { useRouter } from "next/router";
 
 const Login = () => {
   const { status } = useSelector((state: RootState) => state.auth);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const router = useRouter();
 

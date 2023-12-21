@@ -4,14 +4,22 @@ import Head from "next/head";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Button from "@/components/FormElement/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store";
+import { AppDispatch, RootState } from "@/store";
 import router, { useRouter } from "next/router";
-import React, { ChangeEvent, useEffect } from "react";
-import { profile } from "@/store/authSlice";
+import React, { ChangeEvent, useEffect, useState } from "react";
+import { profile, getUser, getAuthStatus } from "@/store/authSlice";
+
+interface User {
+  fullName: string;
+  email: string;
+}
 
 const Profile = () => {
-  const { user, status } = useSelector((state: RootState) => state.auth);
-  const dispatch = useDispatch();
+  const user = useSelector(getUser);
+  const status = useSelector(getAuthStatus);
+  const dispatch = useDispatch<AppDispatch>();
+
+  // const [userState,setUserState] = useState<User>(user)
 
   const handleLogout = () => {
     localStorage.removeItem("token");
