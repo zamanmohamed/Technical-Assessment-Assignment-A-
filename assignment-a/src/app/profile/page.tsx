@@ -1,5 +1,4 @@
-// pages/profile.tsx
-
+"use client";
 import Head from "next/head";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Button from "@/components/FormElement/Button";
