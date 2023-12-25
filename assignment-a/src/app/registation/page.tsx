@@ -6,9 +6,9 @@ import InputField from "@/components/FormElement/InputField";
 import Button from "@/components/FormElement/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store";
-import { useRouter } from "next/router";
-import React, { ChangeEvent } from "react";
-import { signup } from "@/store/authSlice";
+import { useRouter } from "next/navigation";
+import React, { ChangeEvent, useEffect } from "react";
+import { profile, signup } from "@/store/authSlice";
 
 const Register = () => {
   const { status } = useSelector((state: RootState) => state.auth);
@@ -21,25 +21,17 @@ const Register = () => {
 
   const [email, setEmail] = React.useState("");
 
-  function handlePasswordChange(event: ChangeEvent<HTMLInputElement>): void {
-    setUsername(event.target.value);
-  }
-  function handleUsernameChange(event: ChangeEvent<HTMLInputElement>): void {
-    setPassword(event.target.value);
-  }
-  function handleUseremailChange(event: ChangeEvent<HTMLInputElement>): void {
-    setEmail(event.target.value);
+  async function onsubmitHandler(e: React.MouseEvent<HTMLButtonElement> | any) {
+    e.preventDefault();
+    await dispatch(signup({ fullName: username, email, password }));
   }
 
-  function onsubmitHandler() {
-    dispatch(signup({ fullName: username, email, password }));
-
+  useEffect(() => {
     if (status == "succeeded") {
       router.push("/profile");
-    } else {
-      alert("Login Failed");
+      dispatch(profile());
     }
-  }
+  }, [status]);
 
   return (
     <div className="container mt-5">
@@ -59,7 +51,9 @@ const Register = () => {
                     id="fullName"
                     placeholder="Enter your full name"
                     value={username}
-                    onChange={handleUsernameChange}
+                    onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                      setUsername(event.target.value)
+                    }
                   />
                 </div>
 
@@ -72,7 +66,9 @@ const Register = () => {
                     id="username"
                     placeholder="Enter your username"
                     value={email}
-                    onChange={handleUseremailChange}
+                    onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                      setEmail(event.target.value)
+                    }
                   />
                 </div>
 
@@ -85,7 +81,9 @@ const Register = () => {
                     id="username"
                     placeholder="Enter your username"
                     value={password}
-                    onChange={handlePasswordChange}
+                    onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                      setPassword(event.target.value)
+                    }
                   />
                 </div>
 

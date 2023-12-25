@@ -1,6 +1,6 @@
 // components/InputField.tsx
 
-import React from "react";
+import React, { ChangeEvent } from "react";
 
 interface InputFieldProps {
   type: string;

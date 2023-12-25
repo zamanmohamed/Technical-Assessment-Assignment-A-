@@ -7,9 +7,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 
 export default function Home() {
-  const { status } = useSelector((state: RootState) => state.auth);
+  const { user } = useSelector((state: RootState) => state.auth);
 
-  const file = status === "succeeded" ? <Profile /> : <Login />;
+  const file = user ? <Profile /> : <Login />;
 
   return <>{file}</>;
 }

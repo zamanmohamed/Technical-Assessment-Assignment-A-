@@ -3,13 +3,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import InputField from "@/components/FormElement/InputField";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "react-bootstrap";
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, useEffect } from "react";
 import { AppDispatch, RootState } from "@/store";
 import { login } from "@/store/authSlice";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 const Login = () => {
-  const { status } = useSelector((state: RootState) => state.auth);
+  const { status, user } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
 
   const router = useRouter();
@@ -17,23 +17,16 @@ const Login = () => {
   const [email, setemail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
-  function handlePasswordChange(event: ChangeEvent<HTMLInputElement>): void {
-    setemail(event.target.value);
-  }
-
-  function handleemailChange(event: ChangeEvent<HTMLInputElement>): void {
-    setPassword(event.target.value);
-  }
-
-  function submitFunction(): void {
+  function submitFunction(e: React.MouseEvent<HTMLButtonElement> | any): void {
+    e.preventDefault();
     dispatch(login({ email, password }));
-
-    if (status == "succeeded") {
-      router.push("/profile");
-    } else {
-      alert("Login Failed");
-    }
   }
+
+  useEffect(() => {
+    if (user) {
+      router.push("/profile");
+    }
+  }, [user]);
 
   return (
     <div className="container mt-5">
@@ -53,7 +46,9 @@ const Login = () => {
                     id="email"
                     placeholder="Enter your email"
                     value={email}
-                    onChange={handleemailChange}
+                    onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                      setemail(event.target.value)
+                    }
                   />
                 </div>
 
@@ -66,7 +61,9 @@ const Login = () => {
                     id="password"
                     placeholder="Enter your password"
                     value={password}
-                    onChange={handlePasswordChange}
+                    onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                      setPassword(event.target.value)
+                    }
                   />
                 </div>
 

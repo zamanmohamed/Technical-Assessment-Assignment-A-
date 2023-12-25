@@ -15,6 +15,7 @@ interface UsersState {
   accessToken: string | null;
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null | undefined;
+  token: any;
 }
 
 export const signup = createAsyncThunk(
@@ -45,15 +46,27 @@ export const profile = createAsyncThunk("auth/profile", async () => {
   return response.data;
 });
 
-// const token = localStorage.getItem("token");
+let token: any = null;
+
+if (typeof window !== "undefined") {
+  const tokenString = localStorage.getItem("token");
+  token = tokenString ? JSON.parse(tokenString) : null;
+  if (token) {
+    token = {
+      fullName: token.fullName,
+      email: token.email,
+    };
+  }
+}
 
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    user: null,
+    user: token,
     accessToken: "",
     status: "idle",
     error: null,
+    token: token,
   } as UsersState,
   reducers: {
     resetAuthStatus(state) {
@@ -62,7 +75,9 @@ const authSlice = createSlice({
     logout(state) {
       state.user = null;
       state.accessToken = null;
+      state.status = "idle";
       localStorage.removeItem("token");
+      state.token = null;
     },
   },
   extraReducers(builder) {
@@ -77,7 +92,10 @@ const authSlice = createSlice({
           email: action.payload.email,
         };
         state.user = user;
-        localStorage.setItem("token", JSON.stringify(action.payload.token));
+        state.token = localStorage.setItem(
+          "token",
+          JSON.stringify(action.payload)
+        );
       })
       .addCase(signup.rejected, (state, action) => {
         state.status = "failed";
@@ -94,7 +112,10 @@ const authSlice = createSlice({
           email: action.payload.email,
         };
         state.user = user;
-        localStorage.setItem("token", JSON.stringify(action.payload.token));
+        state.token = localStorage.setItem(
+          "token",
+          JSON.stringify(action.payload)
+        );
       })
       .addCase(login.rejected, (state, action) => {
         state.status = "failed";
@@ -107,6 +128,10 @@ const authSlice = createSlice({
           email: action.payload.email,
         };
         state.user = user;
+        state.token = localStorage.setItem(
+          "token",
+          JSON.stringify(action.payload)
+        );
       })
       .addCase(profile.rejected, (state, action) => {
         state.status = "failed";
@@ -118,6 +143,7 @@ const authSlice = createSlice({
 export const getUser = (state: any) => state.auth.user;
 export const getAuthStatus = (state: any) => state.auth.status;
 export const getAuthError = (state: any) => state.auth.error;
+export const getToken = (state: any) => state.auth.token;
 
 export const { resetAuthStatus, logout } = authSlice.actions;
 

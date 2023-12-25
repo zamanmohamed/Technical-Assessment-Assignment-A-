@@ -19,7 +19,7 @@ const authUser = asyncHandler(
     if (user && isPasswordValid) {
       res.json({
         _id: user._id,
-        name: user.fullName,
+        fullName: user.fullName,
         email: user.email,
         token: generateToken(user._id),
       });
@@ -32,6 +32,7 @@ const authUser = asyncHandler(
 
 const registerUser = asyncHandler(
   async (req: express.Request, res: express.Response) => {
+    console.log(req.body, "KKKKKKKKKKKKKJJJJJJJ");
     const { fullName, email, password } = req.body;
 
     const userExist = await User.findOne({ email: email });
